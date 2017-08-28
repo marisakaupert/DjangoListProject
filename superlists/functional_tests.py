@@ -7,8 +7,8 @@ class NewVisitorTest(unittest.TestCase):
        - tests adding the input to a list
        - tests saving the site and revisting the list at another time
     """
-    
-    def setup(self):
+
+    def setUp(self):
         self.browser = webdriver.Chrome()
 
     def tearDown(self):
