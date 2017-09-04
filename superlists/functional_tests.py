@@ -38,13 +38,13 @@ class NewVisitorTest(unittest.TestCase):
         # When the user hits enter, the page updates, and now the page lists
         # "1: " + the task they entered, as an item in the list
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(2)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: buy peacock feathers' for row in rows),
-            "New to-do item did not appear in table"
+        self.assertIn('1. Buy peacock feathers', [row.text for row in rows])
+        self.assertIn('2. Use peacock feathers to make a fly',
+        [row.text for row in rows]
         )
 
         # There is another text box letting the user add another task.
