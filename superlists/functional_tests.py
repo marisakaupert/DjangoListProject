@@ -16,6 +16,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         # the user goes to the homepage
         self.browser.get('http://localhost:8000')
@@ -39,21 +44,20 @@ class NewVisitorTest(unittest.TestCase):
         # "1: " + the task they entered, as an item in the list
         inputbox.send_keys(Keys.ENTER)
         time.sleep(2)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1. Buy peacock feathers', [row.text for row in rows])
-        self.assertIn('2. Use peacock feathers to make a fly',
-        [row.text for row in rows]
-        )
+        self.check_for_row_in_list_table('1. Buy peacock feathers')        
 
         # There is another text box letting the user add another task.
         # the user enters another task
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(2)
 
         # The page updates and shows both items on the lists
+        self.check_for_row_in_list_table('1. Buy peacock feathers')
+        self.check_for_row_in_list_table('2. Use peacock feathers to make a fly')
 
-        # The site has generated a nique rl so the user can go back and see their list.
+        # The site has generated a unique rl so the user can go back and see their list.
         # There is some explanatory text along with it.
 
         # The user visits the url to see that the list has been saved.
