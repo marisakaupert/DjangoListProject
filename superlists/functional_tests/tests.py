@@ -69,10 +69,56 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The site has generated a unique url so the user can go back and see their list.
         # There is some explanatory text along with it.
-        self.fail('Finish the test!')
+        # self.fail('Finish the test!')
 
         # The user visits the url to see that the list has been saved.
 
         # The browser stops when everything has been tested
+    
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # a user starts a new to-do list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy peacock feathers')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1. Buy peacock feathers')
+
+        # the user notices that the list has a unique URL
+        user_list_url = self.browser.current_url
+        self.assertRegex(user_list_url, '/lists/.+')
+
+        # Now another user comes to the site
+
+        # a new browser session opens to make sure that
+        # no informations from the pervious user's list is 
+        # coming through from cookies
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        # this user visits the home page. There is
+        # no sign of the other user's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_id('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # The user starts a new list by entering a new item
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1. Buy milk')
+
+        # this user gets their own unique URL
+        another_user_list_url = self.browser.current_url
+        self.assertRegex(another_user_list_url, '/list/.+')
+        self.assertNotEqual(user_list_url, another_user_list_url)
+
+        # again, there is no trace of the other user's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Satisfied, the user goes back to sleep
+
 
 
