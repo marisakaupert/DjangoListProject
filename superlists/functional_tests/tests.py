@@ -1,9 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """Tests the basic functions of the to-do site:
        - tests user input
        - tests adding the input to a list
@@ -23,7 +23,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # the user goes to the homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # the page title and header say to-do
         self.assertIn('To-Do', self.browser.title)
@@ -57,12 +57,12 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table('1. Buy peacock feathers')
         self.check_for_row_in_list_table('2. Use peacock feathers to make a fly')
 
-        # The site has generated a unique rl so the user can go back and see their list.
+        # The site has generated a unique url so the user can go back and see their list.
         # There is some explanatory text along with it.
+        self.fail('Finish the test!')
 
         # The user visits the url to see that the list has been saved.
 
         # The browser stops when everything has been tested
 
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+
