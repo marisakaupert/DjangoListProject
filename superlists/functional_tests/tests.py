@@ -110,7 +110,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # this user gets their own unique URL
         another_user_list_url = self.browser.current_url
-        self.assertRegex(another_user_list_url, '/list/.+')
+        self.assertRegex(another_user_list_url, '/lists/.+')
         self.assertNotEqual(user_list_url, another_user_list_url)
 
         # again, there is no trace of the other user's list
